@@ -1,0 +1,43 @@
+/**
+ * @file drv_uart.h
+ * @brief UART Driver Layer Header for STM32F429
+ */
+
+#ifndef DRV_UART_H
+#define DRV_UART_H
+
+#include <stdint.h>
+#include <stdbool.h>
+#include "stm32f4xx_hal.h"
+
+// =============================================
+// Callback Type Definitions
+// =============================================
+typedef void (*DrvUartRxCb)(uint8_t byte);
+typedef void (*DrvUartTxCompleteCb)(void);
+typedef bool (*DrvUartTxReqCb)(uint8_t* data, uint16_t* length);
+
+// =============================================
+// Driver Interface Structure
+// =============================================
+typedef struct {
+    void (*setRxCb)(DrvUartRxCb callback);
+    void (*setTxCompleteCb)(DrvUartTxCompleteCb callback);
+    void (*setTxReqCb)(DrvUartTxReqCb callback);
+    bool (*startTx)(void);
+    bool (*isTxBusy)(void);
+    void (*init)(UART_HandleTypeDef* huart);
+} DrvUart;
+
+// =============================================
+// Public Interface Functions
+// =============================================
+const DrvUart* DrvUart_GetInstance(void);
+
+// =============================================
+// HAL Callback Functions
+// =============================================
+void DrvUart_TxCompleteCallback(UART_HandleTypeDef* huart);
+void DrvUart_RxCompleteCallback(UART_HandleTypeDef* huart);
+
+#endif

@@ -1,0 +1,9 @@
+../BSP/drv_uart.c:29:13:DrvUart_SetRxCb	16	static
+../BSP/drv_uart.c:33:13:DrvUart_SetTxCompleteCb	16	static
+../BSP/drv_uart.c:37:13:DrvUart_SetTxReqCb	16	static
+../BSP/drv_uart.c:44:13:DrvUart_StartTx	8	static
+../BSP/drv_uart.c:63:13:DrvUart_IsTxBusy	4	static
+../BSP/drv_uart.c:70:13:DrvUart_Init	16	static
+../BSP/drv_uart.c:86:6:DrvUart_TxCompleteCallback	16	static
+../BSP/drv_uart.c:95:6:DrvUart_RxCompleteCallback	16	static
+../BSP/drv_uart.c:115:16:DrvUart_GetInstance	4	static

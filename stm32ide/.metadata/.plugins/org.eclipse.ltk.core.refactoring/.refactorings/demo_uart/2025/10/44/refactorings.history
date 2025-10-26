@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;demo_uart/demo_led_debug.cfg&apos; to &apos;demo_luart_debug.cfg&apos;" description="Rename resource &apos;demo_led_debug.cfg&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="demo_led_debug.cfg" name="demo_luart_debug.cfg" stamp="1761472623095" updateReferences="true"/>
+</session>

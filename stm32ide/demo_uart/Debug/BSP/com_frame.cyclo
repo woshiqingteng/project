@@ -1,0 +1,11 @@
+../BSP/com_frame.c:40:16:ComFrame_CalcChecksum	2
+../BSP/com_frame.c:48:13:ComFrame_BuildCmd	4
+../BSP/com_frame.c:68:13:ComFrame_ValidateRx	6
+../BSP/com_frame.c:92:13:ComFrame_TxReqCb	2
+../BSP/com_frame.c:104:13:ComFrame_TxCompleteCb	2
+../BSP/com_frame.c:111:13:ComFrame_RxByteCb	7
+../BSP/com_frame.c:140:13:ComFrame_Init	1
+../BSP/com_frame.c:158:13:ComFrame_SendCmd	7
+../BSP/com_frame.c:180:13:ComFrame_SetRxCb	1
+../BSP/com_frame.c:184:13:ComFrame_IsTxBusy	3
+../BSP/com_frame.c:199:17:ComFrame_GetInstance	1

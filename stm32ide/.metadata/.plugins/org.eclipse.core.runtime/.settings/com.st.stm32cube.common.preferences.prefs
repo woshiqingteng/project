@@ -1,0 +1,12 @@
+DeviceConfigurationTool..FirmwareRepositoryPath=D\:\\app\\ST\\Firmware
+DeviceConfigurationTool..OffLineMode=true
+DeviceConfigurationTool..UpdaterCheck=true
+DeviceConfigurationTool..UpdaterCheckInterval=5
+DeviceConfigurationTool..UpdaterDataRefresh=dataRefreshNone
+DeviceConfigurationTool..UpdaterDataRefreshInterfval=3
+DeviceConfigurationTool.AskToDoCodeGenerationOnIocSave=false
+DeviceConfigurationTool.AskToDoSaveAllOnCodeGeneration=false
+DeviceConfigurationTool.AskToSwitchToCPerspectiveOnCodeGeneration=false
+DeviceConfigurationTool.AskToSwitchToCdtPerspective=false
+DeviceConfigurationTool.AskToSwitchToCubeMxPerspective=false
+eclipse.preferences.version=1
