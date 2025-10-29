@@ -1,0 +1,43 @@
+{
+    "model": {
+        "name": "qwen3-coder-480b-a35b-instruct",
+        "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "api_key": "xxx",
+        "temperature": 0,
+        "max_tokens": 8192,
+        "request_timeout": 300,
+        "max_retries": 3
+    },
+    "file": {
+        "encoding": "utf-8",
+        "input_file": "data/input/功能清单-SNHA.xlsx",
+        "output_file": "data/output/IVC_test_case.xlsx",
+        "test_point_prompt_file": "prompt/test_point.md",
+        "test_case_prompt_file": "prompt/test_case.md"
+    },
+    "input_excel_processing": {
+        "default_threads": 12,
+        "header_rows": 2,
+        "data_start_row": 3,
+        "target_sheets": ["云服务"],
+        "column_range": [1, 4]
+    },
+    "output_excel_style": {
+        "font_name": "微软雅黑",
+        "font_size": 9,
+        "first_column_width": 12,
+        "other_columns_width": 36,
+        "header_row_style": {
+            "horizontal": "center",
+            "vertical": "center"
+        },
+        "first_column_style": {
+            "horizontal": "center",
+            "vertical": "center"
+        },
+        "other_columns_style": {
+            "horizontal": "left",
+            "vertical": "center"
+        }
+    }
+}
