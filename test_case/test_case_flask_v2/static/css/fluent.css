@@ -1,0 +1,235 @@
+/* Fluent Design 风格样式 - 与Bootstrap集成 */
+:root {
+    --primary-color: #0078d4;
+    --primary-dark: #106ebe;
+    --primary-light: #deecf9;
+    --surface-color: #ffffff;
+    --surface-alt: #faf9f8;
+    --text-primary: #323130;
+    --text-secondary: #605e5c;
+    --border-color: #edebe9;
+    --shadow: 0 1.6px 3.6px 0 rgba(0, 0, 0, 0.132), 0 0.3px 0.9px 0 rgba(0, 0, 0, 0.108);
+    --shadow-large: 0 6.4px 14.4px 0 rgba(0, 0, 0, 0.132), 0 1.2px 3.6px 0 rgba(0, 0, 0, 0.108);
+}
+
+body {
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background-color: var(--surface-alt);
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+/* 覆盖Bootstrap主色调 */
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.fluent-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-shadow: var(--shadow);
+    transition: all 0.2s ease;
+}
+
+.fluent-card:hover {
+    box-shadow: var(--shadow-large);
+}
+
+.fluent-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    padding: 20px 0;
+    margin-bottom: 24px;
+}
+
+.fluent-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.fluent-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.fluent-btn-secondary {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.fluent-btn-secondary:hover {
+    background-color: var(--primary-light);
+}
+
+.fluent-form-group {
+    margin-bottom: 20px;
+}
+
+.fluent-label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.fluent-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.fluent-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.fluent-progress {
+    height: 4px;
+    background-color: var(--border-color);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 16px 0;
+}
+
+.fluent-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+    transition: width 0.3s ease;
+}
+
+.fluent-alert {
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    border-left: 4px solid;
+}
+
+.fluent-alert-success {
+    background-color: #dff6dd;
+    border-left-color: #107c10;
+    color: #107c10;
+}
+
+.fluent-alert-error {
+    background-color: #fde7e9;
+    border-left-color: #d13438;
+    color: #d13438;
+}
+
+.fluent-alert-info {
+    background-color: #deecf9;
+    border-left-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.console-output {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    font-family: 'Consolas', 'Monaco', monospace;
+    padding: 16px;
+    border-radius: 4px;
+    max-height: 400px;
+    overflow-y: auto;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.console-line {
+    margin-bottom: 4px;
+    white-space: pre-wrap;
+}
+
+.console-info { color: #569cd6; }
+.console-warning { color: #ffcc02; }
+.console-error { color: #f44747; }
+.console-success { color: #4ec9b0; }
+
+/* 文件上传区域样式 */
+.file-upload-area {
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+    background-color: var(--surface-alt);
+    cursor: pointer;
+}
+
+.file-upload-area:hover {
+    border-color: var(--primary-color);
+    background-color: var(--primary-light);
+}
+
+.file-upload-area.dragover {
+    border-color: var(--primary-color);
+    background-color: var(--primary-light);
+}
+
+.file-upload-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+.file-upload-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+/* 状态指示器 */
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-processing {
+    background-color: #fff4ce;
+    color: #8a6d00;
+}
+
+.status-completed {
+    background-color: #dff6dd;
+    color: #107c10;
+}
+
+.status-error {
+    background-color: #fde7e9;
+    color: #d13438;
+}
+
+.log-timestamp {
+    color: #6c757d;
+    font-size: 12px;
+}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="fluent-card p-4">
+    <h2 class="mb-4">处理状态</h2>
+    
+    <div class="mb-4">
+        <span class="status-indicator status-{{ status.status }}">
+            {{ status.status | upper }}
+        </span>
+        <span class="text-muted ms-2">任务ID: {{ job_id }}</span>
+    </div>
+
+    <!-- 进度显示 -->
+    <div class="mb-4">
+        <div class="d-flex justify-content-between mb-2">
+            <span id="status-message">{{ status.message }}</span>
+            <span id="progress-text">{{ status.progress }}%</span>
+        </div>
+        <div class="fluent-progress">
+            <div id="progress-bar" class="fluent-progress-bar" style="width: {{ status.progress }}%"></div>
+        </div>
+    </div>
+
+    <!-- 结果信息 -->
+    <div id="result-info" class="fluent-alert fluent-alert-success" style="display: none;">
+        <h5>🎉 处理完成！</h5>
+        <p id="completion-message" class="mb-3"></p>
+        <a id="download-link" href="#" class="btn btn-primary">下载测试用例</a>
+    </div>
+
+    <!-- 错误信息 -->
+    <div id="error-info" class="fluent-alert fluent-alert-error" style="display: none;">
+        <h5>❌ 处理失败</h5>
+        <p id="error-message"></p>
+        <p class="small mt-2">请检查文件格式和配置，然后重试。</p>
+    </div>
+
+    <!-- 控制台输出 -->
+    <div class="mt-4">
+        <h5 class="mb-3">控制台输出</h5>
+        <div id="console-output" class="console-output">
+            <div class="console-line console-info">正在加载日志...</div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex gap-3 mt-4">
+    <a href="{{ url_for('upload_files') }}" class="btn btn-primary">上传新文件</a>
+    <a href="{{ url_for('config_management') }}" class="btn btn-outline-secondary">检查配置</a>
+    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">返回首页</a>
+</div>
+
+<input type="hidden" id="job-id" value="{{ job_id }}">
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 页面加载完成后会自动初始化监控
+</script>
+{% endblock %}

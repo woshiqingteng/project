@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="fluent-card p-4">
+    <h2 class="mb-4">系统配置</h2>
+    <p class="text-muted mb-4">配置AI模型参数和Excel处理选项</p>
+    
+    <form method="POST">
+        <div class="config-section">
+            <h3>🤖 AI模型配置</h3>
+            <div class="form-row">
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="model_name">模型名称</label>
+                    <input type="text" class="fluent-input" id="model_name" name="model_name" 
+                           value="{{ config.model.name if config.model else 'qwen3-coder-480b-a35b' }}" required>
+                </div>
+                
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="model_base_url">API基础URL</label>
+                    <input type="url" class="fluent-input" id="model_base_url" name="model_base_url" 
+                           value="{{ config.model.base_url if config.model else '' }}" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="model_api_key">API密钥</label>
+                    <input type="password" class="fluent-input" id="model_api_key" name="model_api_key" 
+                           value="{{ config.model.api_key if config.model else '' }}" required>
+                </div>
+                
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="model_temperature">Temperature</label>
+                    <input type="number" class="fluent-input" id="model_temperature" name="model_temperature" 
+                           value="{{ config.model.temperature if config.model else 0 }}" step="0.1" min="0" max="1">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="model_max_tokens">最大Token数</label>
+                    <input type="number" class="fluent-input" id="model_max_tokens" name="model_max_tokens" 
+                           value="{{ config.model.max_tokens if config.model else 8192 }}">
+                </div>
+                
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="model_timeout">请求超时(秒)</label>
+                    <input type="number" class="fluent-input" id="model_timeout" name="model_timeout" 
+                           value="{{ config.model.request_timeout if config.model else 300 }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="config-section">
+            <h3>📁 文件配置</h3>
+            <div class="form-row">
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="output_file">输出文件名</label>
+                    <input type="text" class="fluent-input" id="output_file" name="output_file" 
+                           value="{{ config.file.output_file if config.file else 'IVC_test_case.xlsx' }}">
+                    <small class="text-muted">输出文件会自动添加时间戳</small>
+                </div>
+                
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="encoding">文件编码</label>
+                    <select class="fluent-input" id="encoding" name="encoding">
+                        <option value="utf-8" {% if config.file.encoding == 'utf-8' %}selected{% endif %}>UTF-8</option>
+                        <option value="gbk" {% if config.file.encoding == 'gbk' %}selected{% endif %}>GBK</option>
+                        <option value="gb2312" {% if config.file.encoding == 'gb2312' %}selected{% endif %}>GB2312</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="upload_dir">上传目录</label>
+                    <input type="text" class="fluent-input" id="upload_dir" name="upload_dir" 
+                           value="{{ config.file.upload_dir if config.file else 'upload' }}">
+                </div>
+                
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="output_dir">输出目录</label>
+                    <input type="text" class="fluent-input" id="output_dir" name="output_dir" 
+                           value="{{ config.file.output_dir if config.file else 'output' }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="config-section">
+            <h3>⚙️ 处理配置</h3>
+            <div class="form-row">
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="default_threads">并发线程数</label>
+                    <input type="number" class="fluent-input" id="default_threads" name="default_threads" 
+                           value="{{ config.input_excel_processing.default_threads if config.input_excel_processing else 4 }}">
+                </div>
+                
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="header_rows">表头行数</label>
+                    <input type="number" class="fluent-input" id="header_rows" name="header_rows" 
+                           value="{{ config.input_excel_processing.header_rows if config.input_excel_processing else 2 }}">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="data_start_row">数据起始行</label>
+                    <input type="number" class="fluent-input" id="data_start_row" name="data_start_row" 
+                           value="{{ config.input_excel_processing.data_start_row if config.input_excel_processing else 3 }}">
+                </div>
+                
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="target_sheets">目标Sheet</label>
+                    <input type="text" class="fluent-input" id="target_sheets" name="target_sheets" 
+                           value="{{ config.input_excel_processing.target_sheets | join(', ') if config.input_excel_processing else '云服务' }}"
+                           placeholder="用逗号分隔，如：云服务,Sheet2">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="column_start">列范围起始</label>
+                    <input type="number" class="fluent-input" id="column_start" name="column_start" 
+                           value="{{ config.input_excel_processing.column_range[0] if config.input_excel_processing and config.input_excel_processing.column_range else 1 }}">
+                </div>
+                
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="column_end">列范围结束</label>
+                    <input type="number" class="fluent-input" id="column_end" name="column_end" 
+                           value="{{ config.input_excel_processing.column_range[1] if config.input_excel_processing and config.input_excel_processing.column_range else 4 }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="config-section">
+            <h3>🎨 输出样式配置</h3>
+            <div class="form-row">
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="font_name">字体名称</label>
+                    <input type="text" class="fluent-input" id="font_name" name="font_name" 
+                           value="{{ config.output_excel_style.font_name if config.output_excel_style else '微软雅黑' }}">
+                </div>
+                
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="font_size">字体大小</label>
+                    <input type="number" class="fluent-input" id="font_size" name="font_size" 
+                           value="{{ config.output_excel_style.font_size if config.output_excel_style else 9 }}">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="first_column_width">第一列宽度</label>
+                    <input type="number" class="fluent-input" id="first_column_width" name="first_column_width" 
+                           value="{{ config.output_excel_style.first_column_width if config.output_excel_style else 12 }}">
+                </div>
+                
+                <div class="fluent-form-group">
+                    <label class="fluent-label" for="other_columns_width">其他列宽度</label>
+                    <input type="number" class="fluent-input" id="other_columns_width" name="other_columns_width" 
+                           value="{{ config.output_excel_style.other_columns_width if config.output_excel_style else 36 }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-primary">保存配置</button>
+            <a href="{{ url_for('upload.upload_file') }}" class="btn btn-outline-secondary">返回上传页面</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

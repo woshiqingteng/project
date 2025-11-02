@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-4 mb-3">Excel AI 测试用例生成工具</h1>
+    <p class="lead text-muted">基于AI的自动化测试用例生成平台，快速从需求文档生成专业测试用例</p>
+</div>
+
+<div class="fluent-card p-5 text-center mb-5">
+    <h2 class="h3 mb-4">开始使用</h2>
+    <p class="text-muted mb-4">上传Excel需求文档，配置AI参数，自动生成完整的测试用例</p>
+    <div class="d-flex gap-3 justify-content-center">
+        <a href="{{ url_for('upload_files') }}" class="btn btn-primary">开始生成测试用例</a>
+        <a href="{{ url_for('config_management') }}" class="btn btn-outline-secondary">系统配置</a>
+    </div>
+</div>
+
+<div class="feature-grid">
+    <div class="fluent-card feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>上传需求文档</h3>
+        <p class="text-muted">支持Excel格式的需求文档，自动解析文档结构，提取关键信息</p>
+    </div>
+    
+    <div class="fluent-card feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>AI智能分析</h3>
+        <p class="text-muted">基于大语言模型分析需求，智能生成测试点和完整的测试用例</p>
+    </div>
+    
+    <div class="fluent-card feature-card">
+        <div class="feature-icon">📁</div>
+        <h3>导出测试用例</h3>
+        <p class="text-muted">生成格式化的Excel测试用例文档，包含完整的测试步骤和预期结果</p>
+    </div>
+</div>
+{% endblock %}

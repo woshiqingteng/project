@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="fluent-card p-4 text-center">
+    <div class="error-icon mb-4">⚠️</div>
+    <h2 class="mb-3">处理错误</h2>
+    
+    <div class="fluent-alert fluent-alert-error mb-4">
+        <h5>{{ error.code }}</h5>
+        <p class="mb-0">{{ error.message }}</p>
+    </div>
+    
+    {% if error.detail %}
+    <div class="text-start mb-4">
+        <h6>错误详情：</h6>
+        <pre class="bg-light p-3 rounded"><code>{{ error.detail | tojson(indent=2) }}</code></pre>
+    </div>
+    {% endif %}
+    
+    <div class="d-flex gap-3 justify-content-center">
+        <a href="{{ url_for('upload.upload_file') }}" class="btn btn-primary">重新上传</a>
+        <a href="{{ url_for('config.config_management') }}" class="btn btn-outline-secondary">检查配置</a>
+        <button onclick="history.back()" class="btn btn-outline-secondary">返回上页</button>
+    </div>
+</div>
+{% endblock %}
