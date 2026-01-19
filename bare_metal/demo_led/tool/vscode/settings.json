@@ -1,0 +1,20 @@
+{
+  "files.associations": {
+    // C/C++
+    "*.c": "c",
+    "*.h": "c",
+    "*.cpp": "cpp",
+    "*.hpp": "cpp",
+
+    // Assembler
+    "*.s": "asm",
+    "*.S": "asm",
+    "*.asm": "asm",
+
+    // Linker script
+    "*.ld": "ld",
+    
+    // json
+    "*.json": "jsonc"
+  }
+}

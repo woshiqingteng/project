@@ -1,122 +1,109 @@
-# demo_led Makefile
-# STM32F429IGT6裸机工程
+## project
+PROJECT_NAME = demo_led
+TARGET = $(PROJECT_NAME)
 
-# 工具链
-TOOLCHAIN = arm-none-eabi
-CC = $(TOOLCHAIN)-gcc
-AS = $(TOOLCHAIN)-as
-LD = $(TOOLCHAIN)-ld
-OBJCOPY = $(TOOLCHAIN)-objcopy
-OBJDUMP = $(TOOLCHAIN)-objdump
-SIZE = $(TOOLCHAIN)-size
-GDB = $(TOOLCHAIN)-gdb
-
-# 项目配置
-PROJECT = demo_led
-TARGET = $(PROJECT)
-CPU = cortex-m4
-FPU = fpv4-sp-d16
-FLOAT_ABI = hard
-
-# 目录
+## directory
 SRC_DIR = src
 BUILD_DIR = build
-OBJ_DIR = $(BUILD_DIR)/obj
 BIN_DIR = $(BUILD_DIR)/bin
+OBJ_DIR = $(BUILD_DIR)/obj
+DEP_DIR = $(BUILD_DIR)/dep
+
+## tool
 TOOL_DIR = tool
-
-# 源文件
-SRCS = \
-    $(SRC_DIR)/main.c \
-    $(SRC_DIR)/hardware/core/device/system_stm32f4xx.c \
-    $(SRC_DIR)/hardware/core/device/stm32f4xx_it.c \
-    $(SRC_DIR)/hardware/bsp/bsp_gpio.c \
-    $(SRC_DIR)/hardware/bsp/bsp_rcc.c \
-    $(SRC_DIR)/app/app_led.c
-
-# 汇编文件
-ASM_SRCS = $(SRC_DIR)/hardware/core/device/startup_stm32f429xx.s
-
-# 头文件路径
-INC_DIRS = \
-    -I$(SRC_DIR) \
-    -I$(SRC_DIR)/hardware/core/cmsis \
-    -I$(SRC_DIR)/hardware/core/device \
-    -I$(SRC_DIR)/hardware/bsp \
-    -I$(SRC_DIR)/app
-
-# 目标文件
-OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
-OBJS += $(patsubst $(SRC_DIR)/%.s,$(OBJ_DIR)/%.o,$(ASM_SRCS))
-DEPS = $(OBJS:.o=.d)
-
-# 链接脚本
-LDSCRIPT = $(SRC_DIR)/hardware/core/device/STM32F429IGT6_FLASH.ld
-
-# 编译标志
-MCUFLAGS = -mcpu=$(CPU) -mthumb -mfpu=$(FPU) -mfloat-abi=$(FLOAT_ABI)
-CFLAGS = $(MCUFLAGS) \
-    -O0 -g \
-    -Wall -Werror \
-    -ffunction-sections -fdata-sections \
-    -std=c99 \
-    -DSTM32F429xx \
-    $(INC_DIRS)
-
-# 汇编标志
-ASFLAGS = $(MCUFLAGS)
-
-# 链接标志
-LDFLAGS = $(MCUFLAGS) \
-    -specs=nano.specs \
-    -T$(LDSCRIPT) \
-    -Wl,-Map=$(BIN_DIR)/$(TARGET).map,--cref \
-    -Wl,--gc-sections \
-    -nostartfiles
-
-# 工具配置
 OPENOCD = openocd
 OPENOCD_CFG = $(TOOL_DIR)/openocd/stm32f4xx.cfg
-GDBINIT = $(TOOL_DIR)/gdb/gdbinit
+FLASH_SCRIPT = $(TOOL_DIR)/openocd/flash.sh
+GDBINIT = $(TOOL_DIR)/gdb/.gdbinit
+DEBUG_SCRIPT = $(TOOL_DIR)/gdb/debug.sh
 
-# 默认目标
+## toolchain
+PREFIX = arm-none-eabi-
+CC = $(PREFIX)gcc
+AS = $(PREFIX)as
+LD = $(PREFIX)ld
+OBJCOPY = $(PREFIX)objcopy
+OBJDUMP = $(PREFIX)objdump
+SIZE = $(PREFIX)size
+GDB = $(PREFIX)gdb
+
+## source
+INC_DIRS = $(SRC_DIR) \
+           $(SRC_DIR)/hardware/core/cmsis \
+           $(SRC_DIR)/hardware/core/device \
+           $(SRC_DIR)/hardware/bsp \
+           $(SRC_DIR)/app
+
+C_SOURCES = $(SRC_DIR)/main.c \
+            $(wildcard $(SRC_DIR)/hardware/core/cmsis/*.c) \
+            $(wildcard $(SRC_DIR)/hardware/core/device/*.c) \
+            $(wildcard $(SRC_DIR)/hardware/bsp/*.c) \
+            $(wildcard $(SRC_DIR)/app/*.c)
+
+ASM_SOURCES = $(wildcard $(SRC_DIR)/hardware/core/device/*.s)
+
+C_OBJS   = $(patsubst %.c,$(OBJ_DIR)/%.o,$(C_SOURCES))
+ASM_OBJS = $(patsubst %.s,$(OBJ_DIR)/%.o,$(ASM_SOURCES))
+OBJECTS  = $(ASM_OBJS) $(C_OBJS)
+
+C_DEPS   = $(patsubst %.c,$(DEP_DIR)/%.d,$(C_SOURCES))
+DEPS     = $(C_DEPS)
+
+## flag
+INC_FLAGS = $(addprefix -I,$(INC_DIRS))
+
+MCU_FLAGS = -mcpu=cortex-m4 \
+            -mthumb \
+            -mfpu=fpv4-sp-d16 \
+            -mfloat-abi=hard
+
+CPPFLAGS = $(INC_FLAGS) \
+           -MMD -MP -MF $(DEP_DIR)/$*.d
+
+CFLAGS = $(MCU_FLAGS) \
+         -Wall -Wextra -Werror \
+         -ffunction-sections -fdata-sections \
+         -std=c11 -g -O0
+
+ASFLAGS = $(MCU_FLAGS)
+
+LDSCRIPT = $(wildcard $(SRC_DIR)/hardware/core/device/*.ld)
+
+LDFLAGS = -T $(LDSCRIPT) \
+          -Map=$(BIN_DIR)/$(TARGET).map \
+          --cref \
+          --stats \
+          --gc-sections
+
+## target
 all: $(BIN_DIR)/$(TARGET).elf \
 	$(BIN_DIR)/$(TARGET).bin \
 	$(BIN_DIR)/$(TARGET).hex \
 	$(BIN_DIR)/$(TARGET).dis \
 	$(BIN_DIR)/$(TARGET).sym
 
-# 创建构建目录
-$(BUILD_DIR):
-	mkdir -p $(OBJ_DIR)/hardware/core/device
-	mkdir -p $(OBJ_DIR)/hardware/bsp
-	mkdir -p $(OBJ_DIR)/app
-	mkdir -p $(BIN_DIR)
+$(OBJ_DIR)/%.o: %.c
+	@mkdir -p $(dir $@) $(dir $(DEP_DIR)/$*)
+	@echo "[CC] $<"
+	@$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
-# 编译C文件
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
-	@echo "CC  $<"
-	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+$(OBJ_DIR)/%.o: %.s
+	@mkdir -p $(dir $@)
+	@echo "[AS] $<"
+	@$(AS) $(ASFLAGS) $< -o $@
 
-# 编译汇编文件
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.s | $(BUILD_DIR)
-	@echo "AS  $<"
-	@$(CC) $(ASFLAGS) -c $< -o $@
-
-# 链接
-$(BIN_DIR)/$(TARGET).elf: $(OBJS) | $(BUILD_DIR)
-	@echo "LD  $@"
-	@$(CC) $(LDFLAGS) $(OBJS) -o $@
+$(BIN_DIR)/$(TARGET).elf: $(OBJECTS)
+	@mkdir -p $(BIN_DIR)
+	@echo "[LD] $@"
+	@$(LD) $(OBJECTS) $(LDFLAGS) -o $@
 	@$(SIZE) $@
 
-# 生成BIN
 $(BIN_DIR)/$(TARGET).bin: $(BIN_DIR)/$(TARGET).elf
-	@echo "BIN $@"
+	@echo "[OBJCOPY] $@"
 	@$(OBJCOPY) -O binary $< $@
 
-# 生成HEX
 $(BIN_DIR)/$(TARGET).hex: $(BIN_DIR)/$(TARGET).elf
-	@echo "HEX $@"
+	@echo "[OBJCOPY] $@"
 	@$(OBJCOPY) -O ihex $< $@
 
 $(BIN_DIR)/$(TARGET).dis: $(BIN_DIR)/$(TARGET).elf
@@ -127,24 +114,29 @@ $(BIN_DIR)/$(TARGET).sym: $(BIN_DIR)/$(TARGET).elf
 	@echo "[OBJDUMP] $@"
 	@$(OBJDUMP) -t $< > $@
 
-# 烧录
 flash: $(BIN_DIR)/$(TARGET).elf
-	$(OPENOCD) -f $(OPENOCD_CFG) -c "program $< verify reset exit"
+	@echo "[FLASH] $<"
+	@ELF_FILE="$<" \
+	OPENOCD="$(OPENOCD)" OPENOCD_CFG="$(OPENOCD_CFG)" \
+	$(FLASH_SCRIPT)
 
-# 调试
 debug: $(BIN_DIR)/$(TARGET).elf
-	@$(OPENOCD) -f $(OPENOCD_CFG) &
-	$(GDB) -x $(GDBINIT) $< | tee -a gdb.log
+	@echo "[DEBUG] $<"
+	@ELF_FILE="$<" \
+	OPENOCD="$(OPENOCD)" OPENOCD_CFG="$(OPENOCD_CFG)" \
+	GDB="$(GDB)" GDBINIT="$(GDBINIT)" \
+	$(DEBUG_SCRIPT)
 
-# 清理
+doc:
+	@echo "[DOC] generated"
+	@doxygen doc/Doxyfile
+
 clean:
-	rm -rf $(BUILD_DIR)
+	@echo "[CLEAN] directory"
+	@rm -rf $(BUILD_DIR) doc/html doc/latex
 
-# 重新构建
 rebuild: clean all
 
-# 包含依赖
 -include $(DEPS)
 
-# 伪目标
-.PHONY: all clean rebuild flash debug
+.PHONY: all flash debug doc clean rebuild
