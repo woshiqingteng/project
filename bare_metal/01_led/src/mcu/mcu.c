@@ -1,4 +1,8 @@
-#include "mcu_init.h"
+#include "mcu_system_init.h"
+#include "mcu_nvic.h"
+#include "mcu_systick.h"
+#include "mcu_power.h"
+#include "mcu_gpio.h"
 
 void mcu_init_system(void)
 {

@@ -1,9 +1,7 @@
 #ifndef MCU_SYSTEM_INIT_H
 #define MCU_SYSTEM_INIT_H
 
-#include <stddef.h>
 #include <stdint.h>
-#include "stm32f4xx.h"
 
 typedef struct
 {

@@ -1,6 +1,8 @@
 #ifndef MCU_H
 #define MCU_H
 
-#include "mcu_init.h"
+void mcu_init_system(void);
+void mcu_init_peripheral(void);
+void mcu_init(void);
 
 #endif

@@ -1,6 +1,6 @@
-#include <stddef.h>
 #include "mcu_gpio.h"
 #include "mcu_gpio_reg.h"
+#include <stddef.h>
 
 void mcu_gpio_clk_en_port(mcu_gpio_port_t port)
 {
@@ -21,7 +21,7 @@ void mcu_gpio_en(void)
     
     /* 2. Configure LED0 (PG13) */
     led_config.mode = MCU_GPIO_MODE_OUTPUT;
-led_config.otype = MCU_GPIO_OTYPE_PUSHPULL;
+    led_config.otype = MCU_GPIO_OTYPE_PUSHPULL;
     led_config.ospeed = MCU_GPIO_OSPEED_HIGH;
     led_config.pupd = MCU_GPIO_PUPD_NONE;
     

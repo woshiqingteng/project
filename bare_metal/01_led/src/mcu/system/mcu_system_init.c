@@ -1,4 +1,6 @@
 #include "mcu_system_init.h"
+#include "stm32f4xx.h"
+#include <stddef.h>
 
 static uint8_t mcu_system_clock_set(uint32_t pll_n, uint32_t pll_m, uint32_t pll_p, uint32_t pll_q);
 

@@ -1,9 +1,9 @@
 #ifndef BSP_GPIO_H
 #define BSP_GPIO_H
 
-#include <stdbool.h>
-#include <stdint.h>
-#include "mcu.h"
+// #include <stdbool.h>
+// #include <stdint.h>
+#include "mcu_gpio.h"
 
 typedef enum {
     BSP_GPIO_PIN_LED0,

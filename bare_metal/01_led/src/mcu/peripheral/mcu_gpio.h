@@ -1,7 +1,7 @@
 #ifndef MCU_GPIO_H
 #define MCU_GPIO_H
 
-#include <stdint.h>
+// #include <stdint.h>
 #include <stdbool.h>
 
 /* GPIO port identifiers */

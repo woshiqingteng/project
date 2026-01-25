@@ -1,5 +1,6 @@
 #include "bsp_gpio.h"
 #include "bsp_gpio_pin.h"
+#include "mcu_gpio.h"
 
 bool bsp_gpio_pin_config(bsp_gpio_pin_t pin, const bsp_gpio_config_t *config)
 {
