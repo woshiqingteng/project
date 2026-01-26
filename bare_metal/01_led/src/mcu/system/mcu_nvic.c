@@ -1,5 +1,6 @@
 #include "mcu_nvic.h"
 
+// core_cm4.h NVIC_SetPriorityGrouping
 void mcu_nvic_prio_group_cfg(uint8_t nvic_group)
 {
     uint32_t temp = 0;
@@ -14,6 +15,7 @@ void mcu_nvic_prio_group_cfg(uint8_t nvic_group)
     SCB->AIRCR = temp;               /* Set grouping */
 }
 
+// core_cm4.h NVIC_GetPriorityGrouping
 void mcu_nvic_init(uint8_t preemption_priority, uint8_t sub_priority,
                uint8_t channel, uint8_t group)
 {
@@ -29,6 +31,7 @@ void mcu_nvic_init(uint8_t preemption_priority, uint8_t sub_priority,
     NVIC->IP[channel] |= temp << 4;                  /* Set priority */
 }
 
+// stm32f4xx_hal/ll_exti.c/h
 void mcu_nvic_exti_config(uint8_t gpio_x, uint8_t bit_x, uint8_t trim)
 {
     uint8_t ext_offset = (bit_x % 4) * 4;

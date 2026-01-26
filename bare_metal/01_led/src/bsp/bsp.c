@@ -1,8 +1,9 @@
 #include "mcu.h"
+#include "bsp_led.h"
 
 static void bsp_init_driver(void)
 {
-    // empty
+    bsp_led_init();
 }
 
 void bsp_init(void)

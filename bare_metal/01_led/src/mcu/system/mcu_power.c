@@ -1,4 +1,6 @@
 #include "mcu_power.h"
+#include "stm32f4xx.h"
+#include <stdint.h>
 
 void mcu_power_enter_standby(void)
 {
@@ -12,7 +14,7 @@ void mcu_power_enter_standby(void)
 
 void mcu_power_wait_for_interrupt(void)
 {
-    __asm volatile("wfi");
+    __WFI();
 }
 
 void mcu_power_disable_interrupt(void)

@@ -181,7 +181,7 @@ FillZerobss:
 LoopFillZerobss:
     cmp r2, r4
     bcc FillZerobss
-    bl  SystemInit   
+    /* bl  SystemInit */  
     bl  main
     bx  lr
 

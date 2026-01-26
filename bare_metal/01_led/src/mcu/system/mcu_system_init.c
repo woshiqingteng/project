@@ -4,17 +4,6 @@
 
 static uint8_t mcu_system_clock_set(uint32_t pll_n, uint32_t pll_m, uint32_t pll_p, uint32_t pll_q);
 
-uint8_t mcu_system_clock_init(const mcu_system_clock_config_t* p_config)
-{
-    if (p_config == NULL)
-    {
-        return 1;
-    }
-    
-    return mcu_system_clock_set(p_config->pll_n, p_config->pll_m, 
-                           p_config->pll_p, p_config->pll_q);
-}
-
 void mcu_system_init(uint32_t pll_n, uint32_t pll_m, uint32_t pll_p, uint32_t pll_q)
 {
     RCC->CR |= 0x00000001;           /* Set HSION, enable internal high-speed RC oscillator */
@@ -40,6 +29,7 @@ void mcu_system_set_vector_table(uint32_t nvic_vect_tab, uint32_t offset)
     SCB->VTOR = nvic_vect_tab | (offset & (uint32_t)0xFFFFFE00);
 }
 
+// core_cm4.h NVIC_SystemReset
 void mcu_system_soft_reset(void)
 {
     SCB->AIRCR = 0x05FA0000 | (uint32_t)0x04;
@@ -50,6 +40,7 @@ void mcu_system_set_stack_pointer(uint32_t addr)
     __set_MSP(addr);
 }
 
+// `stm32f4xx_hal/ll_rcc.c/h` `stm32f4xx_hal/ll_bus.c/h`
 static uint8_t mcu_system_clock_set(uint32_t pll_n, uint32_t pll_m, 
                                uint32_t pll_p, uint32_t pll_q)
 {

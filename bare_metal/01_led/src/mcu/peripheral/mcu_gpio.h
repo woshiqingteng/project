@@ -1,8 +1,7 @@
 #ifndef MCU_GPIO_H
 #define MCU_GPIO_H
 
-// #include <stdint.h>
-#include <stdbool.h>
+#include <stdint.h>
 
 /* GPIO port identifiers */
 typedef enum {
@@ -36,6 +35,26 @@ typedef enum {
     MCU_GPIO_PIN_14,
     MCU_GPIO_PIN_15
 } mcu_gpio_pin_t;
+
+/* GPIO alternate function selection */
+typedef enum {
+    MCU_GPIO_AF0 = 0,
+    MCU_GPIO_AF1,
+    MCU_GPIO_AF2,
+    MCU_GPIO_AF3,
+    MCU_GPIO_AF4,
+    MCU_GPIO_AF5,
+    MCU_GPIO_AF6,
+    MCU_GPIO_AF7,
+    MCU_GPIO_AF8,
+    MCU_GPIO_AF9,
+    MCU_GPIO_AF10,
+    MCU_GPIO_AF11,
+    MCU_GPIO_AF12,
+    MCU_GPIO_AF13,
+    MCU_GPIO_AF14,
+    MCU_GPIO_AF15
+} mcu_gpio_af_t;
 
 /* GPIO mode configuration */
 typedef enum {
@@ -79,36 +98,24 @@ typedef struct
     mcu_gpio_otype_t otype;
     mcu_gpio_ospeed_t ospeed;
     mcu_gpio_pupd_t pupd;
+    mcu_gpio_af_t af;
 } mcu_gpio_config_t;
 
-/* GPIO enable function */
-void mcu_gpio_clk_en_port(mcu_gpio_port_t port);
-void mcu_gpio_en(void);
+/* GPIO initialization */
+void mcu_gpio_init(mcu_gpio_port_t port);
 
-/* Configure GPIO pin */
+/* GPIO pin configuration */
 void mcu_gpio_pin_config(mcu_gpio_port_t port, mcu_gpio_pin_t pin,
                          const mcu_gpio_config_t* p_config);
 
-/* Set GPIO pin state */
+/* GPIO pin alternate function configuration */
+void mcu_gpio_pin_af_config(mcu_gpio_port_t port, mcu_gpio_pin_t pin,
+                           mcu_gpio_af_t af);
+
+/* GPIO pin control */
 void mcu_gpio_pin_write(mcu_gpio_port_t port, mcu_gpio_pin_t pin,
                         mcu_gpio_pin_state_t state);
-
-/* Toggle GPIO pin state */
 void mcu_gpio_pin_toggle(mcu_gpio_port_t port, mcu_gpio_pin_t pin);
-
-/* Read GPIO pin state */
 mcu_gpio_pin_state_t mcu_gpio_pin_read(mcu_gpio_port_t port, mcu_gpio_pin_t pin);
 
-/* Simple pin write macro */
-#define MCU_GPIO_PIN_WRITE(port, pin, state) \
-    mcu_gpio_pin_write(port, pin, state)
-
-/* Simple pin toggle macro */
-#define MCU_GPIO_PIN_TOGGLE(port, pin) \
-    mcu_gpio_pin_toggle(port, pin)
-
-/* Simple pin read macro */
-#define MCU_GPIO_PIN_READ(port, pin) \
-    mcu_gpio_pin_read(port, pin)
-
-#endif /* MCU_GPIO_H */
+#endif

@@ -1,24 +1,12 @@
 #include "mcu_systick.h"
+#include "stm32f4xx.h"
 
 static void mcu_systick_delay_xms(uint16_t nms);
 
-static uint8_t s_fac_us = 0;  /**< Microsecond delay multiplier */
-static uint16_t s_fac_ms = 0; /**< Millisecond delay multiplier */
+static uint8_t s_fac_us = 0;
+static uint16_t s_fac_ms = 0;
 
-uint32_t mcu_systick_init(uint32_t ticks)
-{
-    if (ticks > 0x00FFFFFFUL)
-    {
-        return 1;  /* Reload value exceeds 24-bit limit */
-    }
-    
-    SysTick->LOAD = ticks;
-    SysTick->VAL = 0;
-    SysTick->CTRL = 0x00000007;  /* Enable, use processor clock, enable interrupt */
-    
-    return 0;
-}
-
+// core_cm4.h SysTick_Config `stm32f429xx.h` `__Vendor_SysTickConfig`
 void mcu_systick_config(uint32_t sysclk)
 {
     /* SysTick uses external clock source (AHB/8) */
@@ -81,9 +69,4 @@ void mcu_systick_delay_ms(uint16_t ms)
     {
         mcu_systick_delay_xms(remain);
     }
-}
-
-uint32_t mcu_systick_get_counter(void)
-{
-    return SysTick->VAL;
 }

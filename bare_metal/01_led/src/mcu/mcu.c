@@ -7,13 +7,12 @@
 void mcu_init_system(void)
 {
     mcu_system_init(360, 25, 2, 8);
-    // mcu_systick_init(22500);
     mcu_systick_config(180);
 }
 
 void mcu_init_peripheral(void)
 {
-    mcu_gpio_en();
+    mcu_gpio_init(MCU_GPIO_PORT_G);
 }
 
 void mcu_init(void)
