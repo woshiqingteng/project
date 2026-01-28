@@ -1,97 +1,126 @@
 #ifndef MCU_GPIO_H
 #define MCU_GPIO_H
 
+#include "stm32f4xx.h"
 #include <stdint.h>
 
-/* GPIO port identifiers */
+#define MCU_GPIO_GET_PORT(port) \
+    (((port) == 0) ? GPIOA : \
+     ((port) == 1) ? GPIOB : \
+     ((port) == 2) ? GPIOC : \
+     ((port) == 3) ? GPIOD : \
+     ((port) == 4) ? GPIOE : \
+     ((port) == 5) ? GPIOF : \
+     ((port) == 6) ? GPIOG : \
+     ((port) == 7) ? GPIOH : \
+     ((port) == 8) ? GPIOI : \
+     0)
+
+#define MCU_GPIO_GET_RCC_EN(port) \
+    (((port) == 0) ? RCC_AHB1ENR_GPIOAEN : \
+     ((port) == 1) ? RCC_AHB1ENR_GPIOBEN : \
+     ((port) == 2) ? RCC_AHB1ENR_GPIOCEN : \
+     ((port) == 3) ? RCC_AHB1ENR_GPIODEN : \
+     ((port) == 4) ? RCC_AHB1ENR_GPIOEEN : \
+     ((port) == 5) ? RCC_AHB1ENR_GPIOFEN : \
+     ((port) == 6) ? RCC_AHB1ENR_GPIOGEN : \
+     ((port) == 7) ? RCC_AHB1ENR_GPIOHEN : \
+     ((port) == 8) ? RCC_AHB1ENR_GPIOIEN : \
+     0)
+
+#define MCU_GPIO_MODER_MASK(pin)            (3UL << ((pin) * 2))
+#define MCU_GPIO_OSPEEDR_MASK(pin)          (3UL << ((pin) * 2))
+#define MCU_GPIO_PUPDR_MASK(pin)            (3UL << ((pin) * 2))
+#define MCU_GPIO_OTYPER_MASK(pin)           (1UL << (pin))
+#define MCU_GPIO_IDR_MASK(pin)              (1UL << (pin))
+#define MCU_GPIO_BSRR_SET_BIT(pin)          (1UL << (pin))
+#define MCU_GPIO_BSRR_RESET_BIT(pin)        (1UL << ((pin) + 16))
+
+#define MCU_GPIO_AFR_INDEX(pin)             ((pin) >> 3)      // 0 for pins 0-7, 1 for pins 8-15
+#define MCU_GPIO_AFR_OFFSET(pin)            (((pin) & 0x07) * 4)  // 0, 4, 8, 12, 16, 20, 24, 28
+#define MCU_GPIO_AFR_MASK(pin)              (0x0F << MCU_GPIO_AFR_OFFSET(pin))
+
 typedef enum {
     MCU_GPIO_PORT_A = 0,
-    MCU_GPIO_PORT_B,
-    MCU_GPIO_PORT_C,
-    MCU_GPIO_PORT_D,
-    MCU_GPIO_PORT_E,
-    MCU_GPIO_PORT_F,
-    MCU_GPIO_PORT_G,
-    MCU_GPIO_PORT_H,
-    MCU_GPIO_PORT_I
+    MCU_GPIO_PORT_B = 1,
+    MCU_GPIO_PORT_C = 2,
+    MCU_GPIO_PORT_D = 3,
+    MCU_GPIO_PORT_E = 4,
+    MCU_GPIO_PORT_F = 5,
+    MCU_GPIO_PORT_G = 6,
+    MCU_GPIO_PORT_H = 7,
+    MCU_GPIO_PORT_I = 8
 } mcu_gpio_port_t;
 
-/* GPIO pin numbers */
 typedef enum {
     MCU_GPIO_PIN_0 = 0,
-    MCU_GPIO_PIN_1,
-    MCU_GPIO_PIN_2,
-    MCU_GPIO_PIN_3,
-    MCU_GPIO_PIN_4,
-    MCU_GPIO_PIN_5,
-    MCU_GPIO_PIN_6,
-    MCU_GPIO_PIN_7,
-    MCU_GPIO_PIN_8,
-    MCU_GPIO_PIN_9,
-    MCU_GPIO_PIN_10,
-    MCU_GPIO_PIN_11,
-    MCU_GPIO_PIN_12,
-    MCU_GPIO_PIN_13,
-    MCU_GPIO_PIN_14,
-    MCU_GPIO_PIN_15
+    MCU_GPIO_PIN_1 = 1,
+    MCU_GPIO_PIN_2 = 2,
+    MCU_GPIO_PIN_3 = 3,
+    MCU_GPIO_PIN_4 = 4,
+    MCU_GPIO_PIN_5 = 5,
+    MCU_GPIO_PIN_6 = 6,
+    MCU_GPIO_PIN_7 = 7,
+    MCU_GPIO_PIN_8 = 8,
+    MCU_GPIO_PIN_9 = 9,
+    MCU_GPIO_PIN_10 = 10,
+    MCU_GPIO_PIN_11 = 11,
+    MCU_GPIO_PIN_12 = 12,
+    MCU_GPIO_PIN_13 = 13,
+    MCU_GPIO_PIN_14 = 14,
+    MCU_GPIO_PIN_15 = 15
 } mcu_gpio_pin_t;
 
-/* GPIO alternate function selection */
 typedef enum {
     MCU_GPIO_AF0 = 0,
-    MCU_GPIO_AF1,
-    MCU_GPIO_AF2,
-    MCU_GPIO_AF3,
-    MCU_GPIO_AF4,
-    MCU_GPIO_AF5,
-    MCU_GPIO_AF6,
-    MCU_GPIO_AF7,
-    MCU_GPIO_AF8,
-    MCU_GPIO_AF9,
-    MCU_GPIO_AF10,
-    MCU_GPIO_AF11,
-    MCU_GPIO_AF12,
-    MCU_GPIO_AF13,
-    MCU_GPIO_AF14,
-    MCU_GPIO_AF15
+    MCU_GPIO_AF1 = 1,
+    MCU_GPIO_AF2 = 2,
+    MCU_GPIO_AF3 = 3,
+    MCU_GPIO_AF4 = 4,
+    MCU_GPIO_AF5 = 5,
+    MCU_GPIO_AF6 = 6,
+    MCU_GPIO_AF7 = 7,
+    MCU_GPIO_AF8 = 8,
+    MCU_GPIO_AF9 = 9,
+    MCU_GPIO_AF10 = 10,
+    MCU_GPIO_AF11 = 11,
+    MCU_GPIO_AF12 = 12,
+    MCU_GPIO_AF13 = 13,
+    MCU_GPIO_AF14 = 14,
+    MCU_GPIO_AF15 = 15
 } mcu_gpio_af_t;
 
-/* GPIO mode configuration */
 typedef enum {
     MCU_GPIO_MODE_INPUT = 0,
-    MCU_GPIO_MODE_OUTPUT,
-    MCU_GPIO_MODE_ALT,
-    MCU_GPIO_MODE_ANALOG
+    MCU_GPIO_MODE_OUTPUT = 1,
+    MCU_GPIO_MODE_ALT = 2,
+    MCU_GPIO_MODE_ANALOG = 3
 } mcu_gpio_mode_t;
 
-/* GPIO output type */
 typedef enum {
     MCU_GPIO_OTYPE_PUSHPULL = 0,
-    MCU_GPIO_OTYPE_OPENDRAIN
+    MCU_GPIO_OTYPE_OPENDRAIN = 1
 } mcu_gpio_otype_t;
 
-/* GPIO output speed */
 typedef enum {
     MCU_GPIO_OSPEED_LOW = 0,
-    MCU_GPIO_OSPEED_MEDIUM,
-    MCU_GPIO_OSPEED_FAST,
-    MCU_GPIO_OSPEED_HIGH
+    MCU_GPIO_OSPEED_MEDIUM = 1,
+    MCU_GPIO_OSPEED_FAST = 2,
+    MCU_GPIO_OSPEED_HIGH = 3
 } mcu_gpio_ospeed_t;
 
-/* GPIO pull-up/pull-down configuration */
 typedef enum {
     MCU_GPIO_PUPD_NONE = 0,
-    MCU_GPIO_PUPD_UP,
-    MCU_GPIO_PUPD_DOWN
+    MCU_GPIO_PUPD_UP = 1,
+    MCU_GPIO_PUPD_DOWN = 2,
+    MCU_GPIO_PUPD_RES = 3
 } mcu_gpio_pupd_t;
 
-/* GPIO pin state */
 typedef enum {
     MCU_GPIO_PIN_RESET = 0,
-    MCU_GPIO_PIN_SET
-} mcu_gpio_pin_state_t;
+    MCU_GPIO_PIN_SET = 1
+} mcu_gpio_state_t;
 
-/* GPIO configuration structure */
 typedef struct
 {
     mcu_gpio_mode_t mode;
@@ -101,21 +130,8 @@ typedef struct
     mcu_gpio_af_t af;
 } mcu_gpio_config_t;
 
-/* GPIO initialization */
-void mcu_gpio_init(mcu_gpio_port_t port);
-
-/* GPIO pin configuration */
-void mcu_gpio_pin_config(mcu_gpio_port_t port, mcu_gpio_pin_t pin,
-                         const mcu_gpio_config_t* p_config);
-
-/* GPIO pin alternate function configuration */
-void mcu_gpio_pin_af_config(mcu_gpio_port_t port, mcu_gpio_pin_t pin,
-                           mcu_gpio_af_t af);
-
-/* GPIO pin control */
-void mcu_gpio_pin_write(mcu_gpio_port_t port, mcu_gpio_pin_t pin,
-                        mcu_gpio_pin_state_t state);
-void mcu_gpio_pin_toggle(mcu_gpio_port_t port, mcu_gpio_pin_t pin);
-mcu_gpio_pin_state_t mcu_gpio_pin_read(mcu_gpio_port_t port, mcu_gpio_pin_t pin);
+void mcu_gpio_config(mcu_gpio_port_t port, mcu_gpio_pin_t pin, const mcu_gpio_config_t* p_config);
+void mcu_gpio_set(mcu_gpio_port_t port, mcu_gpio_pin_t pin, mcu_gpio_state_t state);
+void mcu_gpio_toggle(mcu_gpio_port_t port, mcu_gpio_pin_t pin);
 
 #endif

@@ -1,8 +1,4 @@
-#include "mcu_system_init.h"
-#include "mcu_nvic.h"
-#include "mcu_systick.h"
-#include "mcu_power.h"
-#include "mcu_gpio.h"
+#include "mcu.h"
 
 void mcu_init_system(void)
 {
@@ -12,7 +8,7 @@ void mcu_init_system(void)
 
 void mcu_init_peripheral(void)
 {
-    mcu_gpio_init(MCU_GPIO_PORT_G);
+    // 
 }
 
 void mcu_init(void)

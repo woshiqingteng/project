@@ -1,33 +1,18 @@
 #ifndef BSP_LED_H
 #define BSP_LED_H
 
-#include <stdbool.h>
+#include "bsp_gpio.h"
 
-/* LED枚举 */
-typedef enum {
-    BSP_LED_0 = 0,
-    BSP_LED_1,
-    BSP_LED_COUNT
-} bsp_led_id_t;
+typedef bsp_gpio_t bsp_led_id_t;
+typedef mcu_gpio_state_t bsp_led_state_t;
 
-/* LED状态 */
-typedef enum {
-    BSP_LED_OFF = 0,
-    BSP_LED_ON
-} bsp_led_state_t;
+#define BSP_DS_0 BSP_GPIO_PIN_LED1
+#define BSP_DS_1 BSP_GPIO_PIN_LED0
+#define BSP_LED_ON MCU_GPIO_PIN_RESET
+#define BSP_LED_OFF MCU_GPIO_PIN_SET
 
-/* LED引脚映射宏 */
-#define BSP_LED_GET_PIN(led_id) \
-    ((led_id) == BSP_LED_0 ? BSP_GPIO_PIN_LED0 : \
-     (led_id) == BSP_LED_1 ? BSP_GPIO_PIN_LED1 : \
-     BSP_GPIO_PIN_LED0)   /* 默认返回LED0引脚 */
+void bsp_led_init(void);
+void bsp_led_set(bsp_led_id_t led_id, bsp_led_state_t state);
+void bsp_led_toggle(bsp_led_id_t led_id);
 
-/* LED初始化 */
-bool bsp_led_init(void);
-
-/* LED控制 */
-bool bsp_led_set(bsp_led_id_t led_id, bsp_led_state_t state);
-bool bsp_led_toggle(bsp_led_id_t led_id);
-bool bsp_led_get(bsp_led_id_t led_id, bsp_led_state_t *state);
-
-#endif /* BSP_LED_H */
+#endif

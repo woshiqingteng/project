@@ -7,9 +7,9 @@
     "*.hpp": "cpp",
 
     // Assembler
-    "*.s": "asm",
-    "*.S": "asm",
-    "*.asm": "asm",
+    "*.s": "asm-collection",
+    "*.S": "asm-collection",
+    "*.asm": "asm-collection",
 
     // Linker script
     "*.ld": "ld",

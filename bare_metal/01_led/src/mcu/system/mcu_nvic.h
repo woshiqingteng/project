@@ -2,7 +2,6 @@
 #define MCU_NVIC_H
 
 #include <stdint.h>
-#include "stm32f4xx.h"
 
 void mcu_nvic_prio_group_cfg(uint8_t nvic_group);
 void mcu_nvic_init(uint8_t preemption_priority, uint8_t sub_priority, 

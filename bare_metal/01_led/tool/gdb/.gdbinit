@@ -7,14 +7,7 @@ define my_init
     set height 0
     set width 0
     set verbose off
-    # timestamp
-    python
-import time
-timestamp = time.strftime("%y%m%d_%H%M%S")
-gdb.execute(f'set $ts = "{timestamp}"')
-gdb.execute(f"set logging file debug_{timestamp}.txt")
-    end
-    #set logging file debug_timestamp.txt
+    set logging file gdb_debug.txt
     set logging overwrite on
     set logging enable on
     # connect
@@ -29,10 +22,10 @@ define my_quit
     quit
 end
 # peripheral
-# gpioa
-define gpioa
-    printf "[GPIOA reg]\n"
-    set $base = 0x40020000
+# gpiob
+define gpiob
+    printf "[GPIOB reg]\n"
+    set $base = 0x40020400
     printf "MODER:   0x%08x\n", *(uint32_t*)($base + 0x00)
     printf "OTYPER:  0x%08x\n", *(uint32_t*)($base + 0x04)
     printf "OSPEEDR: 0x%08x\n", *(uint32_t*)($base + 0x08)
@@ -58,20 +51,25 @@ define rcc
     printf "APB2ENR:  0x%08x\n", *(uint32_t*)($base + 0x44)
 end
 # LED
-define led_on
-    # GPIOG_BSRR set bit13
-    set *(uint32_t*)0x40021814 = (1 << 13)
+define led_off
+    # GPIOB_BSRR set(off) bit0/1
+    set $base = 0x40020400
+    set $bit = 0
+    set *(uint32_t*)($base + 0x18) = (1 << $bit)
     printf "[LED on]\n"
 end
 #
-define led_off
-    # GPIOG_BSRR reset bit13
-    set *(uint32_t*)0x40021814 = (1 << (13 + 16))  
+define led_on
+    # GPIOB_BSRR reset(on) bit0(ds1)/1(ds0)
+    set $base = 0x40020400
+    set $bit = 0
+    set *(uint32_t*)($base + 0x18) = (1 << ($bit  + 16))
     printf "[LED off]\n"
 end
 #
 define led_toggle
-    set $odr = *(uint32_t*)0x40021814
+    set $base = 0x40020400
+    set $odr = *(uint32_t*)($base + 0x14)
     if $odr & (1 << 13)
         led_off
     else
@@ -82,8 +80,8 @@ end
 define my_debug
     break main
     continue
-    rcc
-    gpioa
+    # rcc
+    # gpiob
     led_on
     led_off
     led_toggle
@@ -95,4 +93,4 @@ my_init
 
 my_debug
 
-my_quit
+# my_quit

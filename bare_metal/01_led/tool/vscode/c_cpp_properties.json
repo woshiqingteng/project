@@ -3,16 +3,18 @@
         {
             "name": "gcc-arm",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/bare_metal/01_led/**"
             ],
-            "defines": [],
+            "defines": [
+                "STM32F429xx"
+            ],
             "compilerPath": "arm-none-eabi-gcc",
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-gcc-arm",
             "browse": {
                 "path": [
-                    "${workspaceFolder}/**"
+                    "${workspaceFolder}/bare_metal/01_led/**"
                 ],
                 "limitSymbolsToIncludedHeaders": true
             }

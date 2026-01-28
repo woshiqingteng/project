@@ -7,7 +7,7 @@ OCPID=$!
 ## wait
 sleep 1
 
-$GDB -batch -x $GDBINIT $ELF_FILE
+$GDB -q -x $GDBINIT $ELF_FILE
 
 ## kill
 kill $OCPID
