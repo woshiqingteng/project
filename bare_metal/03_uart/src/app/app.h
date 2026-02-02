@@ -1,0 +1,10 @@
+#ifndef APP_H
+#define APP_H
+
+#include "app_key.h"
+#include "app_led.h"
+
+void app_init(void);
+void app_run(void);
+
+#endif
